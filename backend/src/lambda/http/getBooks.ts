@@ -2,21 +2,20 @@ import 'source-map-support/register'
 import { createLogger } from '../../utils/logger'
 import { APIGatewayProxyEvent, APIGatewayProxyResult, APIGatewayProxyHandler } from 'aws-lambda'
 import { getUserId } from '../utils'
-import { TodosRepository } from '../../dataLayer/todos'
+import { BooksRepository } from '../../dataLayer/books'
 
 const logger = createLogger('auth')
 
 export const handler: APIGatewayProxyHandler = async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
-  // TODO: Get all TODO items for a current user
-  logger.info('GetTodo event fired', {
+  // Get all Books for a current user
+  logger.info('GetBook event fired', {
     event: event,
   })
 
-  // TODO: replace this constant with user id from jwt
   const userId = getUserId(event)
-  let todosRepository = new TodosRepository()
+  let booksRepository = new BooksRepository()
 
-  const result = await todosRepository.getTodosForUser(userId)
+  const result = await booksRepository.getBooksForUser(userId)
 
   let items = result.Items
   return {

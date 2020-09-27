@@ -1,42 +1,41 @@
 import 'source-map-support/register'
 import { APIGatewayProxyEvent, APIGatewayProxyResult, APIGatewayProxyHandler } from 'aws-lambda'
-import { TodosRepository } from '../../dataLayer/todos'
-import { TodoItem } from '../../models/TodoItem'
+import { BooksRepository } from '../../dataLayer/books'
+import { BookItem } from '../../models/BookItem'
 import { createLogger } from '../../utils/logger'
 import { getUserId } from '../utils'
-import { validateTodoItem, getTodoAttachmentUrl, getUploadUrl } from '../../BusinessLayer/todos'
+import { validateBookItem, getBookAttachmentUrl, getUploadUrl } from '../../BusinessLayer/books'
 
 const logger = createLogger('auth')
 
 export const handler: APIGatewayProxyHandler = async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
-    const todoId = event.pathParameters.todoId
-    // TODO: update the user id to be from jwt
+    const bookId = event.pathParameters.bookId
     const userId = getUserId(event)
 
     logger.info('GenerateUploadUrl event fired', {
         event: event,
-        todoId: todoId
+        bookId: bookId
     })
 
-    // TODO: Return a presigned URL to upload a file for a TODO item with the provided id
-    const uploadUrl = getUploadUrl(todoId)
+    //  Return a presigned URL to upload a file for a Book item with the provided id
+    const uploadUrl = getUploadUrl(bookId)
 
-    // TODO: make it work from repository
-    let todosRepository = new TodosRepository()
+    //  make it work from repository
+    let booksRepository = new BooksRepository()
 
 
-    // Get the todo to update it
-    const result = await todosRepository.getTodoItem(todoId)
-    const todo = result.Item as TodoItem
+    // Get the book to update it
+    const result = await booksRepository.getBookItem(bookId)
+    const book = result.Item as BookItem
 
-    // Validate todoItem 
-    validateTodoItem(todo, userId)
+    // Validate bookItem 
+    validateBookItem(book, userId)
 
     // Create the attachment url
-    const attachmentUrl = await getTodoAttachmentUrl(todoId)
+    const attachmentUrl = await getBookAttachmentUrl(bookId)
 
-    // Update the todo with url 
-    await todosRepository.updateTodoAttachmentUrl(todoId, attachmentUrl)
+    // Update the book with url 
+    await booksRepository.updateBookAttachmentUrl(bookId, attachmentUrl)
 
     return {
         statusCode: 201,

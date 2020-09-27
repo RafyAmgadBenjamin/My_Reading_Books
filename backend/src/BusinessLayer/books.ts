@@ -1,24 +1,24 @@
-import { TodoItem } from '../models/TodoItem'
+import { BookItem } from '../models/BookItem'
 import * as uuid from 'uuid'
-import { CreateTodoRequest } from '../requests/CreateTodoRequest'
+import { CreateBookRequest } from '../requests/CreateBookRequest'
 import { createLogger } from '../utils/logger'
 
 const AWSXRay = require('aws-xray-sdk-core');
 const AWS = AWSXRay.captureAWS(require('aws-sdk'));
 
-const bucketName = process.env.TODOS_S3_BUCKET
+const bucketName = process.env.BOOKS_S3_BUCKET
 const logger = createLogger('auth')
 
 
 
-export function validateTodoItem(todoItem: TodoItem, userId: string) {
-    logger.info('validateTodoItem method fired', {
-        todoItem: todoItem,
+export function validateBookItem(bookItem: BookItem, userId: string) {
+    logger.info('validateBookItem method fired', {
+        bookItem: bookItem,
         userId: userId
     })
 
-    // Todo item is not found
-    if (!todoItem) {
+    // Book item is not found
+    if (!bookItem) {
         return {
             statusCode: 404,
             headers: {
@@ -28,8 +28,8 @@ export function validateTodoItem(todoItem: TodoItem, userId: string) {
         }
     }
 
-    // User is not allowed to update the todo
-    if (todoItem.userId !== userId) {
+    // User is not allowed to update the book item
+    if (bookItem.userId !== userId) {
         return {
             statusCode: 403,
             headers: {
@@ -41,37 +41,37 @@ export function validateTodoItem(todoItem: TodoItem, userId: string) {
 }
 
 
-export async function createSingleTodo(userId: string, createTodoRequest: CreateTodoRequest): Promise<TodoItem> {
+export async function createSingleBook(userId: string, createBookRequest: CreateBookRequest): Promise<BookItem> {
 
-    logger.info('createSingleTodo method fired', {
-        createTodoRequest: createTodoRequest,
+    logger.info('createSingleBook method fired', {
+        createBookRequest: createBookRequest,
         userId: userId
     })
 
-    // Generate a UUID for the todo
-    const todoId = uuid.v4()
-    const newItem: TodoItem = {
+    // Generate a UUID for the book item
+    const bookId = uuid.v4()
+    const newItem: BookItem = {
         userId,
-        todoId,
+        bookId,
         // in ISO format (ISO 8601) i.e, in the form of (YYYY-MM-DDTHH:mm:ss.sssZ or ±YYYYYY-MM-DDTHH:mm:ss.sssZ)
         createdAt: new Date().toISOString(),
         //by default it will be false
         done: false,
         attachmentUrl: null,
-        // Copy the rest of properties from CreatedTodoRequest to TODOItem 
-        ...createTodoRequest
+        // Copy the rest of properties from createBookRequest to BookItem 
+        ...createBookRequest
     }
     return newItem
 }
 
-export async function getTodoAttachmentUrl(todoAttachmentId: string): Promise<string> {
-    // Get the url that we use to update the todo item
-    return `https://${bucketName}.s3.amazonaws.com/${todoAttachmentId}`
+export async function getBookAttachmentUrl(bookAttachmentId: string): Promise<string> {
+    // Get the url that we use to update the book item
+    return `https://${bucketName}.s3.amazonaws.com/${bookAttachmentId}`
 }
 
-export function getUploadUrl(todoId: string) {
+export function getUploadUrl(bookId: string) {
     logger.info('getUploadUrl method fired to get the upload url', {
-        todoId: todoId
+        bookId: bookId
     })
 
     // Get a signed url 
@@ -80,7 +80,7 @@ export function getUploadUrl(todoId: string) {
 
     return s3.getSignedUrl('putObject', {
         Bucket: bucketName,
-        Key: todoId,
+        Key: bookId,
         Expires: urlExpiration
     })
 }

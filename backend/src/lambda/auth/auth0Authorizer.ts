@@ -8,7 +8,6 @@ import Axios from 'axios'
 import { JwtPayload } from '../../auth/JwtPayload'
 
 const logger = createLogger('auth')
-// const auth0Secret = process.env.AUTH_0_SECRET
 
 // TODO: Provide a URL that can be used to download a certificate that can be used
 // to verify JWT token signature.

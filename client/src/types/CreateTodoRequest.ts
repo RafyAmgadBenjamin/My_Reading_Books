@@ -1,4 +1,4 @@
-export interface CreateTodoRequest {
+export interface CreateBookRequest {
   name: string
   dueDate: string
 }

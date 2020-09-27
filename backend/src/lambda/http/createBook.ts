@@ -1,10 +1,10 @@
 import 'source-map-support/register'
-import { TodosRepository } from '../../dataLayer/todos'
+import { BooksRepository } from '../../dataLayer/books'
 import { APIGatewayProxyEvent, APIGatewayProxyHandler, APIGatewayProxyResult } from 'aws-lambda'
-import { CreateTodoRequest } from '../../requests/CreateTodoRequest'
-import { TodoItem } from '../../models/TodoItem'
+import { CreateBookRequest } from '../../requests/CreateBookRequest'
+import { BookItem } from '../../models/BookItem'
 import { getUserId } from '../utils'
-import { createSingleTodo } from '../../BusinessLayer/todos'
+import { createSingleBook } from '../../BusinessLayer/books'
 import { createLogger } from '../../utils/logger'
 
 
@@ -12,23 +12,20 @@ import { createLogger } from '../../utils/logger'
 const logger = createLogger('auth')
 
 export const handler: APIGatewayProxyHandler = async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
-    const newTodo: CreateTodoRequest = JSON.parse(event.body)
+    const newBook: CreateBookRequest = JSON.parse(event.body)
 
-    logger.info('CreateTodo event fired', {
+    logger.info('CreateBook event fired', {
         event: event,
     })
-    // TODO: Implement creating a new TODO item 
-
-    // TODO: update it to be read from JWT
 
     const userId = getUserId(event)
-    // Create the new Todo item
-    let item: TodoItem;
-    item = await createSingleTodo(userId, newTodo)
-    // Store the new Todo
-    let todosRepository = new TodosRepository()
+    // Create the new Book item
+    let item: BookItem;
+    item = await createSingleBook(userId, newBook)
+    // Store the new Book
+    let booksRepository = new BooksRepository()
 
-    await todosRepository.addTodoItem(item)
+    await booksRepository.addBookItem(item)
     return {
         statusCode: 201,
         headers: {
