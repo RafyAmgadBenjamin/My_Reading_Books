@@ -104,7 +104,7 @@ export class Books extends React.PureComponent<BooksProps, BooksState> {
   render() {
     return (
       <div>
-        <Header as="h1">BOOKs</Header>
+        <Header as="h1">My Reading Books</Header>
 
         {this.renderCreateBookInput()}
 
@@ -122,12 +122,12 @@ export class Books extends React.PureComponent<BooksProps, BooksState> {
               color: 'teal',
               labelPosition: 'left',
               icon: 'add',
-              content: 'New task',
+              content: 'New book',
               onClick: this.onBookCreate
             }}
             fluid
             actionPosition="left"
-            placeholder="To change the world..."
+            placeholder="Book Tile..."
             onChange={this.handleNameChange}
           />
         </Grid.Column>
