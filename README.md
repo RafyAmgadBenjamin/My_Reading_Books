@@ -1,10 +1,18 @@
-# Serverless TODO
+# Serverless My Reading Books
 
-This is an  application using AWS Lambda and Serverless framework.
+- My Reading Books is an application where the user will add all the books he wants to read in one place and update them when done.
+- This is an  application using AWS Lambda and Serverless framework.
 
 # Functionality of the application
 
-This application will allow creating/removing/updating/fetching TODO items. Each TODO item can optionally have an attachment image. Each user only has access to TODO items that he/she has created.
+This application will allow user to 
+- Create/remove/update/fetch books.
+- Each book can optionally have an attachment image.
+- Each user only has access to books that he/she has created.
+
+# Application Image
+![Reading books list](images/reading_books_list.png)
+
 
 # Prerequisites
 
@@ -41,7 +49,7 @@ npm install
 npm run start
 ```
 
-This should start a development server with the React application that will interact with the serverless TODO application.
+This should start a development server with the React application that will interact with the serverless My Reading Books application.
 
 # Postman collection
 
